@@ -1,0 +1,158 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2c2f33;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+#timer-dock {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    background-color: #23272a;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    text-align: center;
+}
+
+#websocket-config, #scene-inputs {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #7289da;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #5a6ebc;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#scenes {
+    margin-top: 20px;
+}
+
+.scene {
+    background-color: #99aab5;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.active {
+    background-color: #161b9b;
+    padding: 10px;
+}
+
+.warning {
+    color: #7289da;
+}
+
+.over-time {
+    color: #f04747;
+}
+
+.auto-start {
+    margin-left: 10px;
+}
+
+.timer.warning {
+    color: blue;
+}
+
+.timer.over-time {
+    color: red;
+}
+
+.scene.over-time {
+    background-color: darkred;
+}
+
+.collapsible {
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    width: 100%;
+    background-color: #7289da;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.collapsible.active, .collapsible:hover {
+    background-color: #5a6ebc;
+}
+
+.collapsible-content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #313131;
+    border-radius: 0 0 10px 10px;
+}
+
+#time-summary, #json-output-section, #log-section {
+    margin-top: 20px;
+}
+
+#json-output, #log-content {
+    width: 100%;
+    height: 100px;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.connected {
+    color: green;
+}
+
+.disconnected {
+    color: red;
+}
+
+.pulse {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 255, 0, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+}

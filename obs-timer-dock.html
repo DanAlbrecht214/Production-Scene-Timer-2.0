@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBS Timer Dock</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="timer-dock">
+        <h1>OBS Timer Dock</h1>
+        
+        <button class="collapsible">WebSocket Configuration</button>
+        <div id="websocket-config" class="collapsible-content">
+            <label for="websocket-port">WebSocket Port:</label>
+            <input type="text" id="websocket-port" placeholder="Default: 4455">
+            <label for="websocket-password">WebSocket Password:</label>
+            <input type="password" id="websocket-password" placeholder="Enter password if required">
+            <button id="connect-websocket">Connect to WebSocket</button>
+            <div id="websocket-status" class="disconnected">Status: Disconnected</div>
+        </div>
+
+        <div id="control-buttons">
+            <button id="add-checkpoint">Add Checkpoint</button>
+            <button id="load-checkpoints-obs">Load Checkpoints from OBS</button>
+            <button id="reset">Reset</button>
+            <button id="save">Save</button>
+            <button id="load">Load</button>
+        </div>
+
+        <div id="active-checkpoint">
+            <h2>Active Checkpoint</h2>
+            <div id="active-checkpoint-content"></div>
+        </div>
+
+        <button class="collapsible">Checkpoints</button>
+        <div id="checkpoints-section" class="collapsible-content">
+            <div id="checkpoints-list"></div>
+        </div>
+
+        <div id="time-summary">
+            <p>Total Time Allowed: <span id="total-time-allowed">00:00:00</span></p>
+            <p>Total Time Spent: <span id="time-spent">00:00:00</span></p>
+            <p>Total Time Remaining: <span id="time-remaining">00:00:00</span></p>
+        </div>
+
+        <button class="collapsible">JSON Output</button>
+        <div id="json-output-section" class="collapsible-content">
+            <textarea id="json-output" readonly></textarea>
+        </div>
+
+        <button class="collapsible">Log</button>
+        <div id="log-section" class="collapsible-content">
+            <pre id="log-content"></pre>
+        </div>
+
+        <input type="file" id="file-input" style="display: none;">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
