@@ -1,4 +1,4 @@
-OBS Timer Dock 
+Production Timer Dock 
 
 This is a production tool that allows the production team to keep track of time being spent on a particular scene.  This will aid in keeping a planned session on time from a delivery perspective. 
 This tool can be used in OBS as a custom browser dock or you can simply open it as a webpage and it will work the same way.  You also have the choice to use the OBS WebSocket or as a standalone 
