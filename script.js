@@ -16,6 +16,103 @@ document.addEventListener('DOMContentLoaded', () => {
     const connectWebSocketButton = document.getElementById('connect-websocket');
     const websocketStatus = document.getElementById('websocket-status');
     const activeCheckpointContent = document.getElementById('active-checkpoint-content');
+    const copyJsonButton = document.getElementById('copy-json');
+    const jsonOutputTextarea = document.getElementById('json-output');
+    const jsonSaveMessage = document.getElementById('json-save-message');
+    const addCheckpointMessage = document.getElementById('add-checkpoint-message');
+    const resetMessage = document.getElementById('reset-message');
+    const clearCheckpointsButton = document.getElementById('clear-checkpoints');
+    const clearCheckpointsMessage = document.getElementById('clear-checkpoints-message');
+
+    clearCheckpointsButton.addEventListener('click', () => {
+        // Clear all checkpoints
+        checkpoints = [];
+        checkpointsList.innerHTML = ''; // Clear the displayed checkpoints
+        totalTimeSpent = 0; // Reset the total time spent
+        activeCheckpointIndex = null; // Clear any active checkpoint
+        updateTotalTimes(); // Update total time display
+        clearActiveCheckpointHighlighting(); // Clear any active checkpoint highlighting
+
+        // Display the message after clearing the checkpoints
+        clearCheckpointsMessage.style.display = 'block';
+
+        // Hide the message after 5 seconds
+        setTimeout(() => {
+            clearCheckpointsMessage.style.display = 'none';
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+    
+    addCheckpointButton.addEventListener('click', () => {
+        addCheckpoint(); // Existing add checkpoint functionality
+
+        // Display the message after adding a checkpoint
+        addCheckpointMessage.style.display = 'block';
+
+        // Hide the message after 5 seconds
+        setTimeout(() => {
+            addCheckpointMessage.style.display = 'none';
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+
+    resetButton.addEventListener('click', () => {
+        resetTimers(); // Existing reset functionality
+
+        // Display the message after resetting
+        resetMessage.style.display = 'block';
+
+        // Hide the message after 5 seconds
+        setTimeout(() => {
+            resetMessage.style.display = 'none';
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+
+    loadButton.addEventListener('click', () => {
+        loadCheckpoints(); // Existing load functionality
+
+        // Display the message after loading the JSON file
+        loadMessage.style.display = 'block';
+
+        // Hide the message after 5 seconds
+        setTimeout(() => {
+            loadMessage.style.display = 'none';
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+    
+    saveButton.addEventListener('click', () => {
+        saveCheckpoints(); // Existing save functionality
+
+        // Display the message after saving
+        jsonSaveMessage.style.display = 'block';
+
+        // Optional: Automatically scroll to the JSON Output section
+        document.getElementById('json-output-section').scrollIntoView({ behavior: 'smooth' });
+
+        // Hide the message after 10 seconds
+        setTimeout(() => {
+            jsonSaveMessage.style.display = 'none';
+        }, 5000); // 10000 milliseconds = 10 seconds
+    });
+
+    const loadMessage = document.getElementById('load-message');
+
+    loadCheckpointsOBSButton.addEventListener('click', () => {
+        loadCheckpointsFromOBS(); // Existing load functionality
+
+        // Display the message after loading
+        loadMessage.style.display = 'block';
+
+        // Hide the message after 5 seconds
+        setTimeout(() => {
+            loadMessage.style.display = 'none';
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+
+
+    copyJsonButton.addEventListener('click', () => {
+        jsonOutputTextarea.select(); // Select the text in the textarea
+        document.execCommand('copy'); // Copy the selected text to the clipboard
+        alert('JSON copied to clipboard!'); // Optional: Display a confirmation message
+    });
 
     let checkpoints = [];
     let overallTimerInterval = null;
@@ -276,53 +373,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function finishCheckpoint(index) {
         const checkpoint = checkpoints[index];
-        if (checkpoint.interval) clearInterval(checkpoint.interval);
-        checkpoint.active = false;
-        activeCheckpointIndex = null; // Clear active checkpoint index
-        updateCheckpointDisplay(index);
-        updateTotalTimes();
-
-        // Stop all timers if it is the last checkpoint
-        if (index === checkpoints.length - 1) {
-            stopAllTimers();
+        console.log('Finishing checkpoint:', index, 'Current remaining:', checkpoint.remaining);
+    
+        if (checkpoint.interval) {
+            clearInterval(checkpoint.interval);
+            checkpoint.interval = null;
+            console.log('Timer stopped for checkpoint:', index);
         }
+    
+        checkpoint.active = false;
+        checkpoint.remaining = checkpoint.duration; // Reset remaining time to the original duration
+        checkpoint.overTime = 0; // Reset overtime to 0
+        activeCheckpointIndex = null; // Clear active checkpoint index
+        
+        stopAllTimers(); // Ensure all timers are stopped
+        clearActiveCheckpointHighlighting(); // Clear pulsing and highlighting
+    
+        updateCheckpointDisplay(index); // Update display to reflect reset state
+        updateTotalTimes();
     }
-
+    
+    
+    
     function resetTimers() {
-        stopAllTimers();
+        console.log('Resetting all timers...');
+        stopAllTimers(); // Stop any running timers
         checkpoints.forEach((checkpoint, index) => {
-            checkpoint.remaining = parseDuration(document.querySelectorAll('.duration')[index].value);
-            checkpoint.overTime = 0;
-            checkpoint.active = false; // Ensure checkpoint is marked as inactive
-            updateCheckpointDisplay(index);
+            console.log('Resetting checkpoint:', index, 'Original duration:', checkpoint.duration);
+            checkpoint.remaining = checkpoint.duration; // Reset remaining time to original duration
+            checkpoint.overTime = 0; // Reset overtime
+            checkpoint.active = false; // Mark as inactive
+            updateCheckpointDisplay(index); // Update display
         });
         totalTimeSpent = 0;
         activeCheckpointIndex = null; // Clear active checkpoint index
-        updateTotalTimes();
-        logTotalTimes();
-        clearActiveCheckpointHighlighting(); // Clear active checkpoint highlighting
+        updateTotalTimes(); // Update total time display
+        logTotalTimes(); // Log the reset state
+        clearActiveCheckpointHighlighting(); // Clear any active checkpoint highlighting
     }
-
-    function clearActiveCheckpointHighlighting() {
-        checkpoints.forEach((checkpoint, index) => {
-            const checkpointElement = checkpointsList.children[index];
-            checkpointElement.classList.remove('active');
-        });
-        activeCheckpointContent.innerHTML = ''; // Clear the active checkpoint content
-    }
+    
 
     function stopAllTimers() {
-        checkpoints.forEach((checkpoint) => {
+        console.log('Stopping all active timers...');
+        checkpoints.forEach((checkpoint, index) => {
             if (checkpoint.interval) {
                 clearInterval(checkpoint.interval);
                 checkpoint.interval = null;
+                console.log('Timer stopped for checkpoint:', index);
             }
+            checkpoint.active = false; // Ensure checkpoints are marked as inactive
+            updateCheckpointDisplay(index); // Update the display to remove pulsing effects
         });
+    
         if (overallTimerInterval) {
             clearInterval(overallTimerInterval);
             overallTimerInterval = null;
+            console.log('Overall timer stopped.');
         }
     }
+    
+    function clearActiveCheckpointHighlighting() {
+        checkpoints.forEach((checkpoint, index) => {
+            const checkpointElement = checkpointsList.children[index];
+            checkpointElement.classList.remove('active', 'pulse', 'over-time', 'warning');
+        });
+        activeCheckpointContent.innerHTML = ''; // Clear the active checkpoint content
+    }
+    
+    
 
     function parseDuration(duration) {
         const parts = duration.split(':').map(part => parseInt(part, 10));
@@ -355,58 +473,139 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalTimeAllowedClone = totalTimeAllowedElement.cloneNode(true);
         const timeSpentClone = timeSpentElement.cloneNode(true);
         const timeRemainingClone = timeRemainingElement.cloneNode(true);
-
+    
         const totalTimeAllowedLabel = document.createElement('p');
         totalTimeAllowedLabel.textContent = 'Total Time Allowed: ';
         totalTimeAllowedLabel.appendChild(totalTimeAllowedClone);
-
+    
         const timeSpentLabel = document.createElement('p');
         timeSpentLabel.textContent = 'Total Time Spent: ';
         timeSpentLabel.appendChild(timeSpentClone);
-
+    
         const timeRemainingLabel = document.createElement('p');
         timeRemainingLabel.textContent = 'Total Time Remaining: ';
         timeRemainingLabel.appendChild(timeRemainingClone);
-
+    
         clonedCheckpoint.appendChild(totalTimeAllowedLabel);
         clonedCheckpoint.appendChild(timeSpentLabel);
         clonedCheckpoint.appendChild(timeRemainingLabel);
-
+    
+        // Remove the Start button
+        const startButton = clonedCheckpoint.querySelector('.checkpoint-actions button:nth-child(1)');
+        if (startButton) {
+            startButton.remove(); // Remove the Start button from the active checkpoint
+        }
+    
+        // Ensure the Finish button is correctly wired up
+        const finishButton = clonedCheckpoint.querySelector('.checkpoint-actions button:nth-child(1)');
+        if (finishButton) {
+            finishButton.addEventListener('click', () => {
+                finishCheckpoint(checkpoints.indexOf(checkpoint));
+            });
+        }
+    
         activeCheckpointContent.appendChild(clonedCheckpoint);
     }
-
+    
+    
+    function updateCheckpointColor(element, remainingTime, isActive) {
+        const checkpointElement = element.parentElement.parentElement;
+    
+        console.log('Remaining Time:', remainingTime, 'Is Active:', isActive); // Debugging log
+    
+        if (isActive) {
+            if (remainingTime < 0) {
+                console.log('Checkpoint is overtime and should pulse red');
+                // The checkpoint is over time and should pulse red
+                element.style.color = 'red';
+                checkpointElement.classList.add('over-time');
+                checkpointElement.classList.remove('warning');
+                checkpointElement.classList.add('pulse'); // Red pulsing effect
+            } else if (remainingTime < 30) {
+                console.log('Checkpoint is in last 30 seconds and should pulse yellow');
+                // The checkpoint is within the last 30 seconds and should pulse yellow
+                element.style.color = 'yellow';
+                checkpointElement.classList.add('warning');
+                checkpointElement.classList.add('pulse'); // Yellow pulsing effect
+                checkpointElement.classList.remove('over-time');
+            } else {
+                console.log('Checkpoint is within time, no pulsing effect');
+                // Normal countdown without pulsing
+                element.style.color = 'green';
+                checkpointElement.classList.remove('over-time');
+                checkpointElement.classList.remove('warning');
+                checkpointElement.classList.remove('pulse');
+            }
+        } else {
+            console.log('Checkpoint is not active, no pulsing should apply');
+            // Ensure that if not active, no pulsing is applied
+            element.style.color = remainingTime < 0 ? 'red' : 'green';
+            checkpointElement.classList.remove('over-time');
+            checkpointElement.classList.remove('warning');
+            checkpointElement.classList.remove('pulse');
+        }
+    }
+    
     function updateCheckpointDisplay(index) {
         const checkpointElement = checkpointsList.children[index];
         const remainingElement = checkpointElement.querySelector('.remaining');
         const remainingTime = checkpoints[index].remaining;
         const overTime = checkpoints[index].overTime;
-        if (remainingTime <= 0) {
-            remainingElement.textContent = `Overtime: ${formatTime(overTime)}`;
-            checkpointElement.classList.add('over-time'); // Add a class to indicate overtime
-        } else {
-            remainingElement.textContent = formatTime(remainingTime) + (remainingTime < 0 ? ' OT' : '');
-            checkpointElement.classList.remove('over-time'); // Remove the class if not overtime
-        }
-        updateCheckpointColor(remainingElement, remainingTime);
-    }
-
-    function updateCheckpointColor(element, remainingTime) {
-        const checkpointElement = element.parentElement.parentElement;
+        const isActive = checkpoints[index].active;
+    
         if (remainingTime < 0) {
-            element.style.color = 'red';
-            checkpointElement.classList.add('over-time');
-        } else if (remainingTime < 30) {
-            element.style.color = 'yellow';
-            checkpointElement.classList.add('warning');
-            checkpointElement.classList.add('pulse'); // Add pulsing effect
+            remainingElement.textContent = `Overtime: ${formatTime(Math.abs(overTime))}`;
         } else {
-            element.style.color = 'lightgreen';
-            checkpointElement.classList.remove('over-time');
-            checkpointElement.classList.remove('warning');
-            checkpointElement.classList.remove('pulse'); // Remove pulsing effect
+            remainingElement.textContent = formatTime(remainingTime);
+        }
+    
+        updateCheckpointColor(remainingElement, remainingTime, isActive);
+    }
+    
+    
+    
+    function startCheckpointTimer(index, resume = false) {
+        const checkpoint = checkpoints[index];
+        if (!resume) {
+            checkpoint.duration = parseDuration(document.querySelectorAll('.duration')[index].value);
+            checkpoint.remaining = checkpoint.duration;
+        }
+    
+        if (checkpoint.interval) clearInterval(checkpoint.interval);
+    
+        checkpoint.active = true;
+        highlightActiveCheckpoint(index);
+        activeCheckpointIndex = index;
+    
+        checkpoint.interval = setInterval(() => {
+            if (checkpoint.remaining > 0) {
+                checkpoint.remaining -= 1;
+            } else if (checkpoint.remaining <= 0) {
+                checkpoint.remaining -= 1; // Continue counting into negative time
+                checkpoint.overTime += 1;  // Increment overtime
+    
+                if (checkpoint.remaining === 0 && checkpoint.autoStartNext && index + 1 < checkpoints.length) {
+                    clearInterval(checkpoint.interval);
+                    startCheckpointTimer(index + 1);
+                }
+            }
+    
+            updateCheckpointDisplay(index);
+            updateTotalTimes();
+        }, 1000);
+    
+        logIndex++;
+        log.push(`Log ${logIndex}`);
+        logCheckpoint(index);
+    
+        if (!overallTimerInterval) {
+            overallTimerInterval = setInterval(() => {
+                totalTimeSpent += 1;
+                updateTotalTimes();
+            }, 1000);
         }
     }
-
+    
     function updateTotalTimes() {
         totalDuration = checkpoints.reduce((acc, cp) => acc + cp.duration, 0);
         const totalTimeRemaining = totalDuration - totalTimeSpent;

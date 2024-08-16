@@ -8,9 +8,9 @@
 </head>
 <body>
     <div id="timer-dock">
-        <h1>OBS Timer Dock</h1>
+        <h1>Production Timer Dock</h1>
         
-        <button class="collapsible">WebSocket Configuration</button>
+        <button class="collapsible">WebSocket Configuration<span class="indicator">+</span></button>
         <div id="websocket-config" class="collapsible-content">
             <label for="websocket-port">WebSocket Port:</label>
             <input type="text" id="websocket-port" placeholder="Default: 4455">
@@ -26,14 +26,24 @@
             <button id="reset">Reset</button>
             <button id="save">Save</button>
             <button id="load">Load</button>
+            <button id="clear-checkpoints">Clear Checkpoints</button>
+
         </div>
+        <div id="message-area">
+            <p id="add-checkpoint-message" class="message" style="color: yellow; display: none;">A checkpoint has been added. If you have preloaded checkpoints, this will appear at the bottom of your checkpoint list in the Checkpoints section.</p>
+            <p id="reset-message" class="message" style="color: yellow; display: none;">All timers have been reset.</p>
+            <p id="load-message" class="message" style="color: yellow; display: none;">The JSON file you have selected to load has been loaded into the Checkpoints section.</p>
+            <p id="obs-load-message" class="message" style="color: yellow; display: none;">Scenes loaded. Click on the Checkpoints button to view and update durations.</p>
+            <p id="clear-checkpoints-message" class="message" style="color: yellow; display: none;">All checkpoints have been removed. To continue, either add new checkpoints using the Add Checkpoint button or Load button to load a JSON file containing your checkpoints.</p>
+        </div>
+        
 
         <div id="active-checkpoint">
             <h2>Active Checkpoint</h2>
             <div id="active-checkpoint-content"></div>
         </div>
 
-        <button class="collapsible">Checkpoints</button>
+        <button class="collapsible">Checkpoints<span class="indicator">+</span></button>
         <div id="checkpoints-section" class="collapsible-content">
             <div id="checkpoints-list"></div>
         </div>
@@ -44,12 +54,14 @@
             <p>Total Time Remaining: <span id="time-remaining">00:00:00</span></p>
         </div>
 
-        <button class="collapsible">JSON Output</button>
+        <button class="collapsible">JSON Output<span class="indicator">+</span></button>
         <div id="json-output-section" class="collapsible-content">
             <textarea id="json-output" readonly></textarea>
+            <button id="copy-json" style="margin-top: 10px;">Copy JSON</button> <!-- New Copy Button -->
         </div>
+        
 
-        <button class="collapsible">Log</button>
+        <button class="collapsible">Log<span class="indicator">+</span></button>
         <div id="log-section" class="collapsible-content">
             <pre id="log-content"></pre>
         </div>

@@ -19,9 +19,17 @@ h1 {
     text-align: center;
 }
 
-#websocket-config, #scene-inputs {
-    margin-bottom: 20px;
+#websocket-config, #scene-inputs, .collapsible-content {
+    background-color: #2b2e33; /* Slightly darker than input boxes */
+    border-radius: 10px;
+    padding: 10px;
 }
+#websocket-config button {
+    display: block; /* Ensure the button is displayed as a block element */
+    width: 100%; /* Make the button full width */
+    margin-top: 10px; /* Add some margin above the button */
+}
+
 
 button {
     background-color: #7289da;
@@ -36,20 +44,45 @@ button {
 button:hover {
     background-color: #5a6ebc;
 }
+/* Style for the collapsible buttons */
+button.collapsible {
+    background-color: #7289da;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between; /* Align text and indicator at opposite ends */
+    align-items: center;
+}
+
+/* Style for the indicator */
+.indicator {
+    font-weight: bold;
+    transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+/* Rotate the indicator when the section is open */
+button.collapsible.active .indicator {
+    transform: rotate(45deg); /* Turn + into x, or adjust to rotate arrows */
+}
+
 
 label {
     display: block;
     margin-top: 10px;
 }
 
-input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
+input[type="text"], input[type="password"], .checkpoint-name, .duration, textarea {
+    background-color: #ffffff; /* Set the background color to white */
+    border: 1px solid #7289da;
+    color: #000000; /* Text color set to black for readability */
+    width: 80%;
 }
+
+
 
 #scenes {
     margin-top: 20px;
@@ -66,8 +99,7 @@ input[type="text"], input[type="password"] {
 }
 
 .active {
-    background-color: #161b9b;
-    padding: 10px;
+    background-color: #43b581;
 }
 
 .warning {
@@ -116,7 +148,7 @@ input[type="text"], input[type="password"] {
     padding: 0 18px;
     display: none;
     overflow: hidden;
-    background-color: #313131;
+    background-color: #f9f9f9;
     border-radius: 0 0 10px 10px;
 }
 
@@ -145,7 +177,50 @@ input[type="text"], input[type="password"] {
     animation: pulse 1s infinite;
 }
 
-@keyframes pulse {
+.checkpoint-name, .duration {
+    background-color: #40444b; /* Matching background color for checkpoints */
+    border: 1px solid #7289da; /* Add a border */
+    color: #ffffff;
+}
+/* Apply dark background and padding to the Checkpoints section */
+
+#checkpoints-section {
+    background-color: #2b2e33; /* Same dark background as the WebSocket Configuration section */
+    border-radius: 10px;
+    padding: 15px;
+}
+
+
+textarea {
+    background-color: #40444b; /* Similar styling for textarea */
+    color: #ffffff;
+    border: 1px solid #7289da; /* Add a border */
+}
+
+
+.checkpoint.warning.pulse {
+    animation: pulse-yellow 1s infinite;
+}
+
+.checkpoint.over-time.pulse {
+    animation: pulse-red 1s infinite;
+}
+
+#message-area {
+    margin-top: 10px;
+    margin-bottom: 20px; /* Add space below the message area */
+    padding-bottom: 10px; /* Optional: Extra padding if needed */
+    clear: both; /* Ensure it doesn't overlap with other floating content */
+}
+
+p.message {
+    margin: 5px 0; /* Ensure proper spacing between messages */
+    font-size: 16px; /* Adjust size for readability */
+    line-height: 1.4; /* Adjust line height for readability */
+}
+
+
+@keyframes pulse-yellow {
     0% {
         box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
     }
@@ -154,5 +229,17 @@ input[type="text"], input[type="password"] {
     }
     100% {
         box-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
     }
 }

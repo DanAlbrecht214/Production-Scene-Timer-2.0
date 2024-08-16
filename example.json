@@ -1,0 +1,86 @@
+[
+    {
+      "name": "Blank",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Intro",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Opening",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Why Salesforce",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Data Cloud and AI Overview",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "AI Demo",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Q&A",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Demo",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Closing",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Closing Invite Loop",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "This Event has Concluded",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    },
+    {
+      "name": "Slides",
+      "duration": "00:00:00",
+      "remaining": 0,
+      "autoStartNext": false,
+      "overTime": 0
+    }
+  ]
